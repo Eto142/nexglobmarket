@@ -7,7 +7,7 @@
 
     <!-- Sidebar brand starts -->
     <div class="brand">
-      <a href="{{url('home')}}" class="logo">
+      <a href="{{route('admin.dashboard')}}" class="logo">
         <img src="{{asset('io.png')}}" class="d-none d-md-block me-4" alt="Rapid Admin Dashboard" />
         <img src="{{asset('io.png')}}" class="d-block d-md-none me-4" alt="Rapid Admin Dashboard" />
       </a>
@@ -19,59 +19,50 @@
       <div class="sidebarMenuScroll">
         <ul>
           <li class="active-page-link">
-            <a href="{{url('dashboard')}}">
+            <a href="{{route('admin.dashboard')}}">
               <i class="bi bi-house"></i>
               <span class="menu-text">Dashboard</span>
             </a>
           </li>
           <li>
-            <a href="{{url('dashboard')}}">
+            <a href="{{url('admin/users')}}">
               <i class="bi bi-box"></i>
               <span class="menu-text"> Total Users</span>
             </a>
           </li>
 
           <li>
-            <a href="{{route('wallet')}}">
+            <a href="{{route('admin.wallet')}}">
               <i class="bi bi-box"></i>
               <span class="menu-text">Update Wallet</span>
             </a>
           </li>
 
-
-
           <li>
-            <a href="{{url('add-traders')}}">
+            <a href="{{route('admin.add-traders')}}">
               <i class="bi bi-calendar4"></i>
               <span class="menu-text">Add Copy Traders</span>
             </a>
           </li>
 
           <li>
-            <a href="{{route('user.transactions')}}">
+            <a href="{{route('admin.user.transactions')}}">
               <i class="bi bi-calendar4"></i>
               <span class="menu-text">Transactions</span>
             </a>
           </li>
           
-           <li>
-            <a href="{{route('manage-deposit')}}">
+          <li>
+            <a href="{{route('admin.manage-deposit')}}">
               <i class="bi bi-calendar4"></i>
               <span class="menu-text">Total Deposits</span>
             </a>
           </li>
 
- <li>
-            <a href="{{route('manage-withdrawal')}}">
+          <li>
+            <a href="{{route('admin.manage-withdrawal')}}">
               <i class="bi bi-calendar4"></i>
               <span class="menu-text">Total Withdrawals</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="">
-              <i class="bi bi-emoji-expressionless"></i>
-              <span class="menu-text">Change Password</span>
             </a>
           </li>
 
@@ -83,10 +74,15 @@
           </li>
 
           <li>
-            <a href="{{url('logout')}}">
-              <i class="bi bi-emoji-expressionless"></i>
-              <span class="menu-text">Logout</span>
-            </a>
+            <form action="{{route('admin.logout')}}" method="POST" style="display:inline;">
+              @csrf
+              <button type="submit" style="background:none;border:none;padding:0;width:100%;text-align:left;">
+                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span class="menu-text">Logout</span>
+                </a>
+              </button>
+            </form>
           </li>
         </ul>
       </div>

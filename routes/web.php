@@ -184,6 +184,7 @@ Route::match(['get', 'post'],'email-verify', 'App\Http\Controllers\UserControlle
 Route::get('resend-code/{id}', 'App\Http\Controllers\UserController@resendCode')->name('resendCode');
 Route::post('activate-bot', 'App\Http\Controllers\UserController@activateBot')->name('activate.bot');
 Route::get('suspend_account', 'App\Http\Controllers\UserController@suspendAccount')->name('suspend.account');
+Route::post('/add-user', 'App\Http\Controllers\UserManagementController@addUser')->name('add.user');
 
 
 

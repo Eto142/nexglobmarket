@@ -1,249 +1,168 @@
-@include('admin.header')
-<div class="main-panel">
-			<div class="content bg-dark">
-				<div class="page-inner">
-				@if(session('message'))
-<div class="alert alert-success mb-2">{{session('message')}}</div>
-@endif
-					<div class="mt-2 mb-4">
-						<h1 class="title1 text-light">Fundformeprogram users lists</h1>
-					</div>
-					
-					<div>
-    </div>                    <div>
-    </div>					<div class="row">
-						<div class="col-12">
-							<!--<a href="#" data-toggle="modal" data-target="#sendmailModal" class="btn btn-primary btn-lg" style="margin:10px;">Message all</a>-->
-														{{-- <a href="{{route('manage.kyc')}}" class="btn btn-warning btn-lg">KYC</a> --}}
-							 
-							<!--<a href="#" data-toggle="modal" data-target="#adduser" class="float-right btn btn-primary"> <i class='fas fa-plus-circle'></i> Add User</a>-->
-							<!-- Modal -->
-							<div class="modal fade" id="adduser" tabindex="-1" aria-h6ledby="exampleModalh6" aria-hidden="true">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header bg-dark">
-											<!--<h3 class="mb-2 d-inline text-light">Manually Add Users</h3>-->
-											<button type="button" class="close text-light" data-dismiss="modal" aria-h6="Close">
-											<span aria-hidden="true">&times;</span>
-											</button>
-										</div>
-										<div class="modal-body bg-dark">
-											<div>
-											<form role="form" method="post" action="{{ route('add.user') }}">
-                                         {{ csrf_field()}}	
-																						<div class="form-row">
-														<div class="form-group col-md-12">
-															<h6 class="text-light">Username</h6>
-															<input type="text" id="input1" class="form-control bg-dark text-light" name="username" required>
-														</div>
-														<div class="form-group col-md-12">
-															<h6 class="text-light">Fullname</h6>
-															<input type="text" class="form-control bg-dark text-light" name="name" required>
-														</div>
-														<div class="form-group col-md-12">
-															<h6 class="text-light">Email</h6>
-															<input type="email" class="form-control bg-dark text-light" name="email" required>
-														</div>
-														<div class="form-group col-md-12">
-															<h6 class="text-light">Password</h6>
-															<input type="password" class="form-control bg-dark text-light" name="password" required>
-														</div>
-														<div class="form-group col-md-12">
-															<h6 class="text-light">Confirm Password</h6>
-															<input type="password" class="form-control bg-dark text-light" name="password_confirmation" required>
-														</div>
-													</div>
-													<button type="submit" class="px-4 btn btn-primary">Add User</button>
-												</form>  
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="mb-5 row">
-						
-						<div class="col-md-12 shadow card p-4 bg-dark">
-							<div class="row">
-								<div class="col-12">
-									<form class=" form-inline">
-										<div class="">
-											<select class="form-control bg-dark text-light" id="numofrecord">
-												<option>10</option>
-												<option>20</option>
-												<option>30</option>
-												<option>40</option>
-												<option>50</option>
-												<option>100</option>
-												<option>200</option>
-												<option>300</option>
-												<option>400</option>
-												<option>500</option>
-												<option>600</option>
-												<option>700</option>
-												<option>800</option>
-												<option>900</option>
-												<option>1000</option>
-											</select>
-										</div>
-										<div class="">
-											<select class="form-control bg-dark text-light" id="order">
-												<option value="desc">Descending</option>
-												<option value="asc">Ascending</option>
-											</select>
-										</div>
-										<div>
-										<input type="text" id="searchitem" placeholder="Search by name or email" class="float-right mb-2 mr-sm-2 form-control bg-dark text-light">
+@include('manager.header')
+@include('manager.navbar')
 
-										</div>
-										
-									</form>
-								</div>
-							</div>
-							<div class="table-responsive" data-example-id="hoverable-table"> 
-								<table class="table table-hover text-light"> 
-									<thead> 
-										<tr> 
-											<th>Client Name</th>
-									
-											<th>Email</th> 
-											<th>Status</th>
-											<th>Date registered</th> 
-											<th>Action</th> 
-										</tr> 
-									</thead> 
-								<tbody id="userslisttbl">
-								@foreach($user as $users)
-            <tr> 
-                <td>
-				{{$users->name}}
-				</td>
-                <td>{{$users->email}}</td> 
-                @if($users->user_status=='1')
-                <td><span class="badge badge-success">active</span></td> 
-				@elseif($users->user_status=='0')
-				<td><span class="badge badge-danger">inactive</span></td> 
-				@endif
-            	<td>{{ \Carbon\Carbon::parse($users->created_at)->format('D, M j, Y g:i A') }}</td> 
-									
-                <td>
-                    <a class="btn btn-secondary btn-sm" href="{{url('profile/'.$users->id)}}" id="153"  role="button">
-                        Manage
-                    </a>
-                </td> 
-            </tr> 
-            
-           @endforeach
-            
-            </tbody> 
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<script>
-				$('#input1').on('keypress', function(e) {
-					return e.which !== 32;
-				});
-			</script>
+<div class="main-content" id="mainContent">
 
-	<!-- send all users email -->
-	<div id="sendmailModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <div>
+            <h1 class="h3 mb-1">Total Users</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="bi bi-house"></i></a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Users</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="bi bi-person-plus me-1"></i> Add User
+        </button>
+    </div>
 
-		  <!-- Modal content-->
-		  <div class="modal-content">
-			<div class="modal-header bg-dark">
-			  <h4 class="modal-title text-light">This message will be sent to all your users.</h4>
-			  <button type="button" class="close text-light" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body bg-dark">
-				  <form method="post" action="https://altruisticmarkets.com/account/admin/dashboard/sendmailtoall">
-					<input type="hidden" name="_token" value="EqGt2txdTJHMwXVRjoCB9yNMVUEKJvIhyXqL7wBp">					
-					<div class=" form-group">
-						<input type="text" name="subject" class="form-control bg-dark text-light" placeholder="Subject" required>
-					</div>
-					<div class=" form-group">
-						<textarea placeholder="Type your message here" class="form-control bg-dark text-light" name="message" row="8" placeholder="Type your message here" required></textarea>
-					</div>
-					<div class=" form-group">
-						<input type="submit" class="btn btn-light" value="Send">
-					</div>
-				 </form>
-			</div>
-		  </div>
-		</div>
-	  </div>
-	  
-	  
-	  
-	  
-	  <script>
-    // Function to filter table rows based on search input
-    function filterTable() {
-        var searchText = document.getElementById('searchitem').value.toLowerCase();
-        var rows = document.getElementById('userslisttbl').getElementsByTagName('tr');
+    <!-- Alerts -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if(session('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-        for (var i = 0; i < rows.length; i++) {
-            var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-            var email = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+    <!-- Users Table Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 py-3">
+            <h5 class="mb-0 text-dark">All Users</h5>
+            <div class="d-flex gap-2 flex-wrap">
+                <select class="form-select form-select-sm" id="numofrecord" style="width:auto;">
+                    <option value="10">10 per page</option>
+                    <option value="25">25 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                    <option value="999999">All</option>
+                </select>
+                <select class="form-select form-select-sm" id="order" style="width:auto;">
+                    <option value="desc">Newest first</option>
+                    <option value="asc">Oldest first</option>
+                </select>
+                <input type="text" id="searchitem" class="form-control form-control-sm" placeholder="Search name or email..." style="width:220px;">
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Date Registered</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userslisttbl">
+                        @foreach($user as $index => $users)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $users->name }} {{ $users->lname ?? '' }}</td>
+                            <td>{{ $users->email }}</td>
+                            <td>
+                                @if($users->user_status == '1')
+                                    <span class="badge bg-success">Active</span>
+                                @else
+                                    <span class="badge bg-danger">Inactive</span>
+                                @endif
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($users->created_at)->format('M j, Y g:i A') }}</td>
+                            <td>
+                                <a href="{{ url('admin/profile/' . $users->id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye me-1"></i>Manage
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-            if (name.includes(searchText) || email.includes(searchText)) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }
-    }
-
-    // Event listener for search input
-    document.getElementById('searchitem').addEventListener('keyup', filterTable);
-</script>
-
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ route('add.user') }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter full name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Enter password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm password" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
-    // Function to sort and paginate the table
-    function sortAndPaginate() {
-        var numPerPage = parseInt(document.getElementById('numofrecord').value);
-        var order = document.getElementById('order').value;
-        var table = document.getElementById('userslisttbl');
-        var rows = Array.from(table.getElementsByTagName('tr')).slice(1); // Exclude header row
-        var pageCount = Math.ceil(rows.length / numPerPage);
-        
-        // Sort the rows based on the selected order
-        rows.sort(function(a, b) {
-            var aValue = a.getElementsByTagName('td')[0].textContent.toLowerCase();
-            var bValue = b.getElementsByTagName('td')[0].textContent.toLowerCase();
-            return (order === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue));
+    // Search
+    document.getElementById('searchitem').addEventListener('keyup', function () {
+        const search = this.value.toLowerCase();
+        document.querySelectorAll('#userslisttbl tr').forEach(row => {
+            const name = row.cells[1]?.textContent.toLowerCase() ?? '';
+            const email = row.cells[2]?.textContent.toLowerCase() ?? '';
+            row.style.display = (name.includes(search) || email.includes(search)) ? '' : 'none';
+        });
+    });
+
+    // Sort & paginate
+    function applySort() {
+        const numPerPage = parseInt(document.getElementById('numofrecord').value);
+        const order = document.getElementById('order').value;
+        const tbody = document.getElementById('userslisttbl');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort((a, b) => {
+            const aVal = parseInt(a.cells[0]?.textContent.trim()) || 0;
+            const bVal = parseInt(b.cells[0]?.textContent.trim()) || 0;
+            return order === 'asc' ? aVal - bVal : bVal - aVal;
         });
 
-        // Display the sorted and paginated rows
-        var startIndex = 0;
-        for (var i = 0; i < pageCount; i++) {
-            var pageRows = rows.slice(startIndex, startIndex + numPerPage);
-            pageRows.forEach(row => row.style.display = '');
-            startIndex += numPerPage;
-        }
-
-        // Hide rows that are not in the current page
-        rows.slice(startIndex).forEach(row => row.style.display = 'none');
+        rows.forEach((row, i) => {
+            tbody.appendChild(row);
+            row.style.display = i < numPerPage ? '' : 'none';
+        });
     }
 
-    // Event listeners for sorting and pagination
-    document.getElementById('numofrecord').addEventListener('change', sortAndPaginate);
-    document.getElementById('order').addEventListener('change', sortAndPaginate);
-
-    // Initial sort and pagination on page load
-    window.onload = function() {
-        sortAndPaginate();
-    };
+    document.getElementById('numofrecord').addEventListener('change', applySort);
+    document.getElementById('order').addEventListener('change', applySort);
+    window.addEventListener('load', applySort);
 </script>
 
-
-	  <!-- /send all users email Modal -->
-			
-@include('admin.footer')
-				
+@include('manager.footer')

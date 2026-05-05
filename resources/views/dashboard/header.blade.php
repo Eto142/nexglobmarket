@@ -617,10 +617,35 @@ function markAllNotificationsAsRead() {
                         </a>
                     </li>
 
+                     <li class="side-nav-item">
+    <a href="{{ route('user.notifications') }}" class="side-nav-link">
+        <i class="uil-bell"></i>
+        <span>Notifications</span>
+    </a>
+</li>
+
                     <li class="side-nav-item">
                         <a href="{{url('profile')}}" class="side-nav-link">
                             <i class="ri-user-2-fill"></i>
                             <span>My Account </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="{{ url('verify-account') }}" class="side-nav-link d-flex align-items-center justify-content-between">
+                            <span class="d-flex align-items-center">
+                                 <i class="ri-user-2-fill"></i>
+                                <span>KYC Verification</span>
+                            </span>
+                            @if(Auth::user()->kyc_status == '1')
+                                <span class="badge bg-success ms-2" style="font-size:10px;">Verified</span>
+                            @elseif(Auth::user()->kyc_status == '0')
+                                <span class="badge bg-warning ms-2" style="font-size:10px;">Pending</span>
+                            @elseif(Auth::user()->kyc_status == '2')
+                                <span class="badge bg-danger ms-2" style="font-size:10px;">Rejected</span>
+                            @else
+                                <span class="badge bg-danger ms-2" style="font-size:10px; animation: badgePulse 1.5s infinite;">! Verify</span>
+                            @endif
                         </a>
                     </li>
 

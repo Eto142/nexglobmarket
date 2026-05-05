@@ -1,54 +1,117 @@
 <!DOCTYPE html>
-<html>
-
-<!-- Mirrored from  by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Dec 2021 09:08:22 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Register | Opts</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.7 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
   <link rel="stylesheet" href="dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <link rel="icon" href="img/favicon.png">
-
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
   <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap">
 
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fc;
+      background-image: url('images/bg2.jpg');
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .register-box {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      max-width: 480px;
+      width: 100%;
+      padding: 40px 35px;
+    }
+
+    .register-logo img {
+      max-width: 140px;
+      margin: 0 auto 10px;
+      display: block;
+    }
+
+    .register-box-body h3 {
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .register-box-body p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .form-control {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      box-shadow: none;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0,123,255,0.15);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      border-radius: 6px;
+      padding: 12px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    select.form-control {
+      color: #555;
+    }
+
+    @media (max-width: 480px) {
+      .register-box {
+        padding: 30px 20px;
+      }
+    }
+  </style>
 </head>
-<body class="hold-transition register-page" style="background-image: url('images/bg2.jpg');">
 
-     
-    <div class="nk-ovm mask-a shape-a"></div>
-    <!-- Place Particle Js -->
-    <div id="particles-bg" class="particles-container particles-bg"></div>
-</div>
-<div class="register-box">
-  <div class="register-logo" style="margin-bottom: 1px;">
-    <a href="/"><img src="io.png" class="img-responsive"></a>
-    
-  </div>
+<body>
 
-  <div class="register-box-body">
-    <h3 class="login-box-msg"> Your Details</h3>
-    <p class="login-box-msg"> Please Complete All Fields</p>
-    <form method="POST" action="{{route('step2')}}">
+  <div class="register-box">
+    <div class="register-logo">
+      <a href="/"><img src="logo.png" alt="Logo"></a>
+    </div>
+
+    <div class="register-box-body">
+      <h3>Your Details</h3>
+      <p>Please complete all fields</p>
+
+      <form method="POST" action="{{route('step2')}}">
         @csrf 
+
         <div class="form-group has-feedback">
-            <select class="form-control" name="country" required>
-                <option value="">---Select Country---</option>
+          <select class="form-control" name="country" required>
+           <option value="">---Select Country---</option>
                 <option value='Afghanistan'>Afghanistan</option>
                 <option value='Albania'>Albania</option>
                 <option value='Algeria'>Algeria</option>
@@ -294,47 +357,38 @@
                 <option value='Zaire'>Zaire</option>
                 <option value='Zambia'>Zambia</option>
                 <option value='Zimbabwe'>Zimbabwe</option>
-            </select>
-          </div>
-          <div class="form-group has-feedback">
-            <input type="text" name="state" class="form-control" placeholder="state" required>
-            <span class="fa fa-flag-o form-control-feedback"></span>
-          </div>
+          </select>
+        </div>
 
-          <div class="form-group has-feedback">
-            <input type="text" name="pcode" class="form-control" placeholder="Post Code" required>
-            <span class="glyphicon glyphicon-user form-control-feedback"></span>
-          </div>
-    
-          <div class="form-group has-feedback">
-            <input type="text" name="address" class="form-control" placeholder="Street Address" required>
-            <span class="glyphicon glyphicon-user form-control-feedback"></span>
-          </div>
-          
-          <div class="form-group has-feedback">
-            <input type="text" name="phone" class="form-control" placeholder="Phone" required>
-            <span class="fa fa-phone form-control-feedback"></span>
-          </div>
-         
-                         
-  
-    <div class="form-group">
-        <button name="next"  class="btn btn-lg btn-primary btn-block">Next</button>
+        <div class="form-group has-feedback">
+          <input type="text" name="state" class="form-control" placeholder="State" required>
+          <span class="fa fa-flag-o form-control-feedback"></span>
+        </div>
+
+        <div class="form-group has-feedback">
+          <input type="text" name="pcode" class="form-control" placeholder="Post Code" required>
+          <span class="glyphicon glyphicon-map-marker form-control-feedback"></span>
+        </div>
+
+        <div class="form-group has-feedback">
+          <input type="text" name="address" class="form-control" placeholder="Street Address" required>
+          <span class="glyphicon glyphicon-home form-control-feedback"></span>
+        </div>
+
+        <div class="form-group has-feedback">
+          <input type="text" name="phone" class="form-control" placeholder="Phone Number" required>
+          <span class="fa fa-phone form-control-feedback"></span>
+        </div>
+
+        <div class="form-group">
+          <button name="next" class="btn btn-primary btn-block btn-lg">Next</button>
+        </div>
+      </form>
     </div>
-</form><!-- form -->
-
-</div>
   </div>
-  <!-- /.form-box -->
-</div>
-<!-- /.register-box -->
 
-<!-- jQuery 3 -->
-<script src="dist/js/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="dist/js/bootstrap.min.js"></script>
+  <script src="dist/js/jquery.min.js"></script>
+  <script src="dist/js/bootstrap.min.js"></script>
 
 </body>
-
-<!-- Mirrored from Cityfxmarkets.cc/register.php by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Dec 2021 09:08:23 GMT -->
 </html>
