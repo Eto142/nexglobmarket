@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->string('method');
-            $table->text('address');
-            $table->string('destination_tag')->nullable();
             $table->timestamps();
         });
     }

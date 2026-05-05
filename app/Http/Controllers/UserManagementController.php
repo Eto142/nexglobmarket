@@ -26,7 +26,6 @@ use App\Mail\WithdrawalAmountUpdatedMail;
 use App\Mail\WithdrawalTaxAmountUpdatedMail;
 use App\Mail\WithdrawalTaxCodeUpdated;
 use App\Models\Notification;
-use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -39,11 +38,12 @@ class UserManagementController extends Controller
 
     public function viewUser()
     {
-        if (Auth::guard('admin')->check()) {
-            $user = DB::table('users')->where('usertype', '0')->get();
-            return view('manager.manage_users', compact('user'));
+
+        if (Auth::user()->user_type == '1') {
+            $result      = DB::table('users')->where('usertype', '0')->get();
+            return view('manager.users', compact('result'));
         } else {
-            return redirect()->route('admin.login');
+            return redirect()->route('home');
         }
     }
 
@@ -217,7 +217,6 @@ class UserManagementController extends Controller
             $data['credit'] = Transaction::where('user_id', $id)->where('status', '1')->sum('credit');
              $data['debit'] = Transaction::where('user_id', $id)->where('status', '1')->sum('debit');
             $data['user_balance'] =  $data['credit'] - $data['debit'];
-        $data['notifications'] = Notification::where('user_id', $id)->with('user')->orderBy('id', 'desc')->get();
         return view('manager.user', $data, compact('userProfile', 'userProfit', 'totalBalance', 'totalProfit', 'totalDeposit', 'totalBonus', 'totalWithdrawal', 'kyc'));
     }
     public function sendUserMail($email)
@@ -523,44 +522,8 @@ class UserManagementController extends Controller
 
     public function updateWallet()
     {
-        $wallets = Wallet::all();
-        return view('manager.update_wallet', compact('wallets'));
-    }
 
-    public function addUser(Request $request)
-    {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:6',
-        ]);
-
-        User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        return back()->with('success', 'User added successfully.');
-    }
-
-    public function updateAdminPassword(Request $request)
-    {
-        $request->validate([
-            'old_password' => 'required',
-            'password'     => 'required|confirmed|min:6',
-        ]);
-
-        $admin = Auth::guard('admin')->user();
-
-        if (!\Hash::check($request->old_password, $admin->password)) {
-            return back()->withErrors(['old_password' => 'Current password is incorrect.']);
-        }
-
-        $admin->password = bcrypt($request->password);
-        $admin->save();
-
-        return back()->with('status', 'Password updated successfully.');
+        return view('manager.update_wallet');
     }
 
     public function saveWallet(Request $request)

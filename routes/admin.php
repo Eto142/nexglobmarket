@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-     Route::prefix('admin')->name('admin.')->group(function () {
+     Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
@@ -37,21 +37,21 @@ use Illuminate\Support\Facades\Route;
     });
 
 // manger user details from admin
-Route::get('/users', 'App\Http\Controllers\UserManagementController@viewUser')->name('users');
-Route::get('/profile/{id}/', 'App\Http\Controllers\UserManagementController@userProfile')->name('profile');
-Route::match(['get', 'post'], '/approve-deposit/{id}/', 'App\Http\Controllers\UserManagementController@ApproveDeposit')->name('approve.deposit');
-Route::match(['get', 'post'], '/decline-deposit/{id}/', 'App\Http\Controllers\UserManagementController@DeclineDeposit')->name('decline.deposit');
+Route::get('/users', 'App\Http\Controllers\UserManagementController@viewUser');
+Route::get('/profile/{id}/', 'App\Http\Controllers\UserManagementController@userProfile');
+Route::get('/approve-deposit/{id}/', 'App\Http\Controllers\UserManagementController@ApproveDeposit');
+Route::get('/decline-deposit/{id}/', 'App\Http\Controllers\UserManagementController@DeclineDeposit');
 
-Route::match(['get', 'post'], '/approve-withdrawal/{id}/', 'App\Http\Controllers\UserManagementController@ApproveWithdrawal')->name('approve.withdrawal');
-Route::match(['get', 'post'], '/decline-withdrawal/{id}/', 'App\Http\Controllers\UserManagementController@DeclineWithdrawal')->name('decline.withdrawal');
+Route::get('/approve-withdrawal/{id}/', 'App\Http\Controllers\UserManagementController@ApproveWithdrawal');
+Route::get('/decline-withdrawal/{id}/', 'App\Http\Controllers\UserManagementController@DeclineWithdrawal');
 Route::get('/add-profit/{id}/', 'App\Http\Controllers\UserManagementController@getUserProfit');
-Route::post('/debit-profit', 'App\Http\Controllers\UserManagementController@debitUserProfit')->name('debit.profit');
+Route::post('/debit-profit', 'App\Http\Controllers\UserManagementController@debitUserProfit');
 Route::get('/debit-profit/{id}/', 'App\Http\Controllers\UserManagementController@getDebitProfit');
-Route::post('/add-profit', 'App\Http\Controllers\UserManagementController@addUserProfit')->name('add.profit');
+Route::post('/add-profit', 'App\Http\Controllers\UserManagementController@addUserProfit');
 Route::get('/add-deposit/{id}/', 'App\Http\Controllers\UserManagementController@getUserDeposit');
-Route::post('/add-deposit', 'App\Http\Controllers\UserManagementController@addUserDeposit')->name('add.deposit');
+Route::post('/add-deposit', 'App\Http\Controllers\UserManagementController@addUserDeposit');
 Route::get('/add-referral/{id}/', 'App\Http\Controllers\UserManagementController@getUserReferral');
-Route::post('/add-referral', 'App\Http\Controllers\UserManagementController@addUserReferral')->name('add.referral');
+Route::post('/add-referral', 'App\Http\Controllers\UserManagementController@addUserReferral');
 Route::get('/total-deposits', 'App\Http\Controllers\UserManagementController@usersDeposit');
 Route::get('/total-withdrawals', 'App\Http\Controllers\UserManagementController@usersWithdrawals');
 Route::get('/total-profits', 'App\Http\Controllers\UserManagementController@usersProfit');
@@ -65,7 +65,7 @@ Route::get('/all-transactions', 'App\Http\Controllers\UserManagementController@a
 Route::get('/send-mail', 'App\Http\Controllers\UserManagementController@sendTestMail');
 Route::get('/send-mail/{id}/', 'App\Http\Controllers\UserManagementController@sendMail');
 Route::post('/send-user-email', 'App\Http\Controllers\UserManagementController@sendUserEmail');
-Route::match(['get', 'post'], '/delete/{id}', 'App\Http\Controllers\UserManagementController@deleteUser')->name('delete');
+Route::get('/delete/{id}', 'App\Http\Controllers\UserManagementController@deleteUser');
 Route::get('send-user-mail/{id}', 'App\Http\Controllers\UserManagementController@sendUserMail');
 Route::get('update_wallet', 'App\Http\Controllers\UserManagementController@updateWallet')->name('update.wallet');
 Route::post('admin_update_wallet', 'App\Http\Controllers\UserManagementController@saveWallet')->name('admin.save.wallet');
@@ -75,8 +75,8 @@ Route::get('/edit-trader/{id}/', 'App\Http\Controllers\UserManagementController@
 Route::match(['get', 'post'], 'update-trader/{id}', 'App\Http\Controllers\UserManagementController@updateTrader')->name('update.trader');
 Route::post('save-trader', 'App\Http\Controllers\UserManagementController@saveTrader')->name('save.trader');
 Route::get('/delete-trader/{id}', 'App\Http\Controllers\UserManagementController@deleteTrader');
-Route::match(['get', 'post'], '/accept-kyc/{id}/', 'App\Http\Controllers\UserManagementController@acceptKyc')->name('accept.kyc');
-Route::match(['get', 'post'], '/decline-kyc/{id}/', 'App\Http\Controllers\UserManagementController@rejectKyc')->name('decline.kyc');
+Route::get('/accept-kyc/{id}/', 'App\Http\Controllers\UserManagementController@acceptKyc');
+Route::get('/decline-kyc/{id}/', 'App\Http\Controllers\UserManagementController@rejectKyc');
 Route::get('/accept-bot/{id}/', 'App\Http\Controllers\UserManagementController@acceptBot');
 Route::get('/decline-bot/{id}/', 'App\Http\Controllers\UserManagementController@rejectBot');
 Route::match(['get', 'post'], 'send-mail', 'App\Http\Controllers\UserManagementController@sendMail')->name('send.mail');
@@ -103,18 +103,8 @@ Route::get('/{user}/suspension', 'App\Http\Controllers\UserManagementController@
 
     Route::post('/choose-wallet', [WalletController::class, 'chooseWallet'])->name('choose.wallet');
 
-    Route::get('/deposits', [ManageDepositController::class, 'UsersDepositHistory'])->name('deposits');
 
-    Route::get('/manage-payment', [ManagePaymentController::class, 'ManagePayment'])->name('manage.payment');
-
-    Route::get('/send-email', [SendEmailController::class, 'index'])->name('send.email');
-    Route::post('/send-email', [SendEmailController::class, 'send'])->name('send.email.post');
-
-    Route::get('/transactions', 'App\Http\Controllers\UserManagementController@allTransactions')->name('transactions');
-
-    Route::post('/update-tradefee/{id}', [ManageUserController::class, 'updateTradefee'])->name('update.tradefee');
-    Route::post('/users/send-mail', 'App\Http\Controllers\UserManagementController@sendUserEmail')->name('users.send-mail');
-    Route::post('/update-password', 'App\Http\Controllers\UserManagementController@updateAdminPassword')->name('update.password');
+    Route::get('/deposits', [ManageDepositController::class, 'UsersDepositHistory'])->name('deposits'); // becomes 'admin.user'
 
 });
 
