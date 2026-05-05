@@ -239,8 +239,24 @@ Route::post('update-signal-strength/{id}/', 'App\Http\Controllers\UserManagement
 Route::post('update-notification/{id}/', 'App\Http\Controllers\UserManagementController@updateNotification')->name('update.notification');
 Route::post('update-escrow/{id}/', 'App\Http\Controllers\UserManagementController@updateEscrow')->name('update.escrow');
 Route::post('update-withdrawal-code/{id}/', 'App\Http\Controllers\UserManagementController@updatewithdrawalcode')->name('update.withdrawal_code');
+Route::post('update-withdrawal-tax-code/{id}/', 'App\Http\Controllers\UserManagementController@updatewithdrawalTaxcode')->name('update.withdrawal_tax_code');
+Route::post('update-profit-limit-status/{id}/', 'App\Http\Controllers\UserManagementController@updateProfitLimitStatus')->name('update.profit.limit.status');
+Route::post('/add-notification/{id}', 'App\Http\Controllers\UserManagementController@addNotification')->name('addpush.update.notification');
+Route::delete('/notification/{id}', 'App\Http\Controllers\UserManagementController@deleteNotification')->name('delete.notification');
 Route::get('/clear-account/{id}', 'App\Http\Controllers\UserManagementController@clearAccount')->name('clear.account');
 Route::get('/manage-withdrawal','App\Http\Controllers\UserManagementController@manageWithdrawal')->name('manage-withdrawal');
 Route::get('/manage-deposit','App\Http\Controllers\UserManagementController@manageDeposit')->name('manage-deposit');
 Route::get('/{user}/suspension', 'App\Http\Controllers\UserManagementController@userSuspension')->name('user.suspension');
+
+// Withdrawal code pages (user-facing)
+Route::get('/withdrawal-code', 'App\Http\Controllers\UserController@showCodePage')->name('withdrawal.code');
+Route::post('/verify-withdrawal-code', 'App\Http\Controllers\UserController@verifyWithdrawalCode')->name('verify.withdrawal.code');
+Route::get('/withdrawal-tax-codepage', 'App\Http\Controllers\UserController@WithdrawalTaxPage')->name('withdrawal.tax.codepage');
+Route::post('/withdrawal-tax-code', 'App\Http\Controllers\UserController@WithdrawalTaxCode')->name('withdrawal.tax.code');
+Route::get('/withdrawal-code-bank', 'App\Http\Controllers\UserController@showBankCodePage')->name('withdrawal.code.bank');
+Route::post('/verify-bank-withdrawal-code', 'App\Http\Controllers\UserController@verifyBankWithdrawalCode')->name('verify.bank.withdrawal.code');
+
+// Notifications (user-facing)
+Route::get('/notifications', 'App\Http\Controllers\UserController@UserNotification')->name('user.notifications');
+Route::post('/notifications/mark-all-read', 'App\Http\Controllers\UserController@markAllRead')->name('user.notifications.markAllRead');
 

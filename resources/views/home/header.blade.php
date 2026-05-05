@@ -686,3 +686,192 @@ SAVE10 </div>
 </a>
 </div>
 </section>
+
+<style>
+    .forex-notification {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        width: 300px;
+        padding: 16px;
+        margin: 8px 0;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+        transform: translateX(-110%);
+        animation: slideIn 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards, fadeOut 0.8s 7s ease forwards;
+        z-index: 1000;
+        border-left: 5px solid #2ecc71;
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+    }
+    
+    .forex-notification:hover {
+        transform: translateX(0) scale(1.02);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .forex-notification.withdrawal {
+        border-left-color: #e74c3c;
+    }
+    
+    .forex-notification.bitcoin {
+        border-left-color: #f39c12;
+    }
+    
+    .notification-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        min-width: 30px;
+        text-align: center;
+    }
+    
+    .earning .notification-icon {
+        color: #2ecc71;
+    }
+    
+    .withdrawal .notification-icon {
+        color: #e74c3c;
+    }
+    
+    .bitcoin .notification-icon {
+        color: #f39c12;
+    }
+    
+    .notification-content {
+        flex: 1;
+    }
+    
+    .notification-title {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 4px;
+        color: #2c3e50;
+    }
+    
+    .notification-message {
+        font-size: 13.5px;
+        color: #34495e;
+        line-height: 1.4;
+    }
+    
+    .notification-amount {
+        font-weight: 700;
+        color: inherit;
+    }
+    
+    .notification-time {
+        font-size: 11.5px;
+        color: #7f8c8d;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .notification-time:before {
+        content: "🕒";
+        margin-right: 4px;
+        font-size: 10px;
+    }
+    
+    @keyframes slideIn {
+        to { transform: translateX(0); }
+    }
+    
+    @keyframes fadeOut {
+        to { opacity: 0; transform: translateX(0) translateY(20px); }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateX(0) translateY(0); }
+        50% { transform: translateX(0) translateY(-5px); }
+    }
+    
+    .forex-notification.new {
+        animation: slideIn 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards, 
+                   float 2s 0.6s ease infinite, 
+                   fadeOut 0.8s 7s ease forwards;
+    }
+</style>
+
+<script>
+    const countries = {
+        "US": "🇺🇸", "UK": "🇬🇧", "CA": "🇨🇦", "AU": "🇦🇺", 
+        "DE": "🇩🇪", "FR": "🇫🇷", "JP": "🇯🇵", "BR": "🇧🇷", 
+        "IN": "🇮🇳", "ZA": "🇿🇦", "NG": "🇳🇬", "RU": "🇷🇺",
+        "CN": "🇨🇳", "AE": "🇦🇪", "SG": "🇸🇬"
+    };
+    
+    const names = [
+        "James", "Emma", "Liam", "Olivia", "Noah", "Ava", 
+        "William", "Sophia", "Oliver", "Isabella", "Mohammed",
+        "Chen", "Hiroshi", "Wei", "Amina", "Fatima", "Ivan"
+    ];
+    
+    const paymentMethods = [
+        "Bitcoin", "Bank Transfer", "Skrill", "Neteller", 
+        "PayPal", "Perfect Money", "Payoneer", "USDT"
+    ];
+    
+    function showNotification(type) {
+        const amount = (Math.random() * (type === 'earning' ? 15000 : 8000) + 1000).toFixed(2);
+        const countryCodes = Object.keys(countries);
+        const countryCode = countryCodes[Math.floor(Math.random() * countryCodes.length)];
+        const name = names[Math.floor(Math.random() * names.length)];
+        const profit = (Math.random() * 35 + 5).toFixed(1);
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const paymentMethod = paymentMethods[Math.floor(Math.random() * paymentMethods.length)];
+        
+        const isCrypto = ["Bitcoin", "USDT"].includes(paymentMethod);
+        const actualType = isCrypto ? "bitcoin" : type;
+        
+        const notification = document.createElement('div');
+        notification.className = `forex-notification ${actualType} new`;
+        
+        notification.innerHTML = `
+            <div class="notification-icon">
+                ${actualType === 'earning' ? '📈' : 
+                  actualType === 'bitcoin' ? '₿' : '💳'}
+            </div>
+            <div class="notification-content">
+                <div class="notification-title">
+                    ${actualType === 'earning' ? 'Profit Earned!' : 
+                      actualType === 'bitcoin' ? 'Crypto Withdrawal' : 'Withdrawal Processed'}
+                </div>
+                <div class="notification-message">
+                    ${name} ${countries[countryCode]} ${actualType === 'earning' 
+                        ? `earned <span class="notification-amount">$${amount}</span> (${profit}% profit)` 
+                        : `withdrew <span class="notification-amount">$${amount}</span> via ${paymentMethod}`}
+                </div>
+                <div class="notification-time">${time}</div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 8000);
+    }
+    
+    setTimeout(() => showNotification('earning'), 800);
+    setTimeout(() => showNotification('withdrawal'), 2000);
+    setTimeout(() => showNotification('earning'), 3200);
+    setTimeout(() => showNotification('withdrawal'), 4500);
+    
+    function showRandomNotification() {
+        const type = Math.random() > 0.45 ? 'earning' : 'withdrawal';
+        showNotification(type);
+        setTimeout(showRandomNotification, Math.random() * 8000 + 4000);
+    }
+    
+    setTimeout(showRandomNotification, 6000);
+    
+    setInterval(() => {
+        if (Math.random() < 0.1) {
+            showNotification('withdrawal');
+        }
+    }, 15000);
+</script>

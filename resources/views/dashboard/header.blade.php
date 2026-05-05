@@ -286,134 +286,203 @@ href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.mi
                         </div>
                     </li>
 
-                    <li class="dropdown notification-list">
-                       
-                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg py-0">
-                            <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6 class="m-0 font-16 fw-semibold"> Notification</h6>
-                                    </div>
-                                    <div class="col-auto">
-                                        <a href="javascript: void(0);" class="text-dark text-decoration-underline">
-                                            <small>Clear All</small>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                    @php 
+$userNotifications = \App\Models\Notification::where('user_id', auth()->id())
+    ->latest()
+    ->take(10)
+    ->get(); 
+$unreadCount = $userNotifications->where('is_read', 0)->count();
+@endphp 
 
-                            <div class="px-2" style="max-height: 300px;" data-simplebar>
+ <li class="dropdown notification-list">
+<div class="dropdown d-inline-block">
+    <button type="button" class="btn header-item noti-icon position-relative ai-notification-btn" 
+            id="page-header-notifications-dropdown"
+            data-bs-toggle="dropdown" 
+            aria-haspopup="true" 
+            aria-expanded="false">
+        <div class="ai-bell-container">
+            <i class="ri-notification-3-line font-22" class="icon-lg ai-bell-icon"></i>
 
-                                <h5 class="text-muted font-13 fw-normal mt-2">Today</h5>
-                                <!-- item-->
+            @if($unreadCount > 0)
+            <span class="badge bg-danger rounded-pill ai-notification-badge animate__animated animate__bounceIn">
+                {{ $unreadCount }}
+            </span>
+            @endif
+            <div class="ai-bell-ring"></div>
+        </div>
+    </button>
+    
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 ai-notification-dropdown" 
+         aria-labelledby="page-header-notifications-dropdown">
+        
+        <!-- Header -->
+        <div class="p-3 ai-notification-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h6 class="m-0 text-dark fw-bold">
+                        <i class="mdi mdi-bell-ring-outline me-2 text-primary"></i>
+                        Notifications
+                    </h6>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-primary ai-pulse-badge">
+                        Unread ({{ $unreadCount }})
+                    </span>
+                </div>
+            </div>
+        </div>
 
-                                <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon bg-primary">
-                                                    <i class="mdi mdi-comment-account-outline"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Datacorp <small class="fw-normal text-muted ms-1">1 min ago</small></h5>
-                                                <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon bg-info">
-                                                    <i class="mdi mdi-account-plus"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Admin <small class="fw-normal text-muted ms-1">1 hours ago</small></h5>
-                                                <small class="noti-item-subtitle text-muted">New user registered</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <h5 class="text-muted font-13 fw-normal mt-0">Yesterday</h5>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon">
-                                                    <img src="{{asset('user/uploads/id/'.Auth::user()->photo)}}" class="img-fluid rounded-circle" alt="" />
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Cristina Pride <small class="fw-normal text-muted ms-1">1 day ago</small></h5>
-                                                <small class="noti-item-subtitle text-muted">Hi, How are you? What about our next meeting</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <h5 class="text-muted font-13 fw-normal mt-0">30 Dec 2021</h5>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon bg-primary">
-                                                    <i class="mdi mdi-comment-account-outline"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Datacorp</h5>
-                                                <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon">
-                                                    <img src="{{asset('user/uploads/id/'.Auth::user()->photo)}}" class="img-fluid rounded-circle" alt="" />
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
-                                                <small class="noti-item-subtitle text-muted">Wow ! this admin looks good and awesome design</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <div class="text-center">
-                                    <i class="mdi mdi-dots-circle mdi-spin text-muted h3 mt-0"></i>
-                                </div>
-                            </div>
-
-                            <!-- All-->
-                            <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item border-top border-light py-2">
-                                View All
-                            </a>
-
+        <!-- Notification List -->
+        <div data-simplebar style="max-height: 280px;" class="ai-notification-list">
+            @forelse($userNotifications as $note)
+            <div class="ai-notification-item animate__animated animate__fadeInRight" 
+                 data-notification-id="{{ $note->id }}"
+                 data-read="{{ $note->is_read ? 'true' : 'false' }}"
+                 style="animation-delay: {{ $loop->index * 0.05 }}s">
+                <div class="d-flex align-items-start p-3">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="ai-notification-icon bg-{{ $note->is_read ? 'secondary' : 'primary' }}-subtle">
+                            <i class="bx bx-{{ $note->is_read ? 'bell' : 'bell-ring' }} text-{{ $note->is_read ? 'secondary' : 'primary' }} fs-5"></i>
+                            @if(!$note->is_read)
+                            <div class="ai-pulse-dot"></div>
+                            @endif
                         </div>
-                    </li>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="mb-0 text-dark fw-semibold {{ $note->is_read ? '' : 'unread-text' }}">
+                                {{ $note->message }}
+                            </h6>
+                        </div>
+                        <div class="font-size-13 text-muted">
+                            <p class="mb-0">
+                                <i class="mdi mdi-clock-outline me-1"></i>
+                                <span class="ai-time-ago">{{ $note->created_at->diffForHumans() }}</span>
+                                <small class="ms-2 text-muted">{{ $note->created_at->format('h:i A') }}</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @if(!$note->is_read)
+                <div class="ai-notification-progress">
+                    <div class="ai-progress-bar"></div>
+                </div>
+                @endif
+            </div>
+            @empty
+            <div class="text-center py-5 ai-empty-state">
+                <div class="ai-empty-icon mb-3">
+                    <i class="mdi mdi-bell-off-outline display-4 text-muted"></i>
+                </div>
+                <h6 class="text-muted mb-2">No notifications yet</h6>
+                <p class="text-muted small">We'll notify you when something arrives</p>
+            </div>
+            @endforelse
+        </div>
 
-                    
+        <!-- Footer -->
+        <div class="p-3 border-top bg-light-subtle ai-notification-footer">
+            <div class="d-grid">
+                <a class="btn btn-primary btn-sm ai-view-all-btn" href="{{ route('user.notifications') }}">
+                    <i class="mdi mdi-arrow-right-circle me-2"></i>
+                    <span>View All Notifications</span>
+                </a>
+            </div>
+            @if($unreadCount > 0)
+            <div class="text-center mt-2">
+                <button class="btn btn-sm btn-outline-secondary ai-mark-all-btn" onclick="markAllNotificationsAsRead()">
+                    Mark all as read
+                </button>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+</li>
+
+<style>
+    .ai-notification-btn { position: relative; border: none; background: transparent; transition: all 0.3s ease; padding: 8px 12px; }
+    .ai-bell-container { position: relative; display: flex; align-items: center; justify-content: center; }
+    .ai-notification-badge { position: absolute; top: -5px; right: -5px; font-size: 0.7rem; font-weight: 600; padding: 4px 6px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; animation: badgePulse 2s infinite; box-shadow: 0 2px 8px rgba(220,53,69,0.4); }
+    @keyframes badgePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .ai-bell-ring { position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 2px solid transparent; border-radius: 50%; transform: translate(-50%, -50%); animation: bellRing 3s infinite; opacity: 0; }
+    @keyframes bellRing { 0% { border-color: rgba(67,97,238,0.3); width: 40px; height: 40px; opacity: 1; } 100% { border-color: rgba(67,97,238,0); width: 60px; height: 60px; opacity: 0; } }
+    .ai-notification-dropdown { border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); background: white; min-width: 380px; overflow: hidden; }
+    .ai-notification-header { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-bottom: 1px solid #e9ecef; }
+    .ai-pulse-badge { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .ai-notification-list { background: white; }
+    .ai-notification-item { border-bottom: 1px solid #f8f9fa; transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .ai-notification-item:hover { background: rgba(67,97,238,0.03); transform: translateX(5px); }
+    .ai-notification-item[data-read="false"] { background: rgba(67,97,238,0.05); border-left: 3px solid #4361ee; }
+    .ai-notification-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; transition: all 0.3s ease; }
+    .ai-pulse-dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: #4361ee; border-radius: 50%; animation: dotPulse 1.5s infinite; }
+    @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.7; } }
+    .unread-text { color: #2c3e50; font-weight: 700 !important; }
+    .ai-notification-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(67,97,238,0.1); }
+    .ai-progress-bar { height: 100%; background: linear-gradient(90deg, #4361ee, #3a0ca3); width: 0%; animation: progressFill 3s ease-in-out infinite; }
+    @keyframes progressFill { 0% { width: 0%; } 50% { width: 100%; } 100% { width: 0%; } }
+    .ai-empty-state { padding: 40px 20px; }
+    .ai-notification-footer { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); }
+    .ai-view-all-btn { border: none; border-radius: 8px; padding: 8px 16px; font-weight: 500; transition: all 0.3s ease; }
+    .ai-view-all-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(67,97,238,0.3); }
+    .ai-mark-all-btn { border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; transition: all 0.3s ease; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationBtn = document.querySelector('.ai-notification-btn');
+    if (!notificationBtn) return;
+    const bellRing = document.querySelector('.ai-bell-ring');
+    const unreadCount = {{ $unreadCount }};
+    if (unreadCount > 0 && bellRing) bellRing.style.display = 'block';
+    else if (bellRing) bellRing.style.display = 'none';
+
+    const dropdownEl = document.getElementById('page-header-notifications-dropdown');
+    if (dropdownEl) {
+        dropdownEl.addEventListener('show.bs.dropdown', function () {
+            const badge = document.querySelector('.ai-notification-badge');
+            const unreadSpan = document.querySelector('.ai-pulse-badge');
+            if (badge) badge.textContent = '';
+            if (unreadSpan) unreadSpan.textContent = 'Unread (0)';
+            document.querySelectorAll('.ai-notification-item[data-read="false"]').forEach(item => {
+                item.setAttribute('data-read', 'true');
+                item.style.borderLeft = 'none';
+                item.style.background = 'white';
+                item.querySelector('.ai-pulse-dot')?.remove();
+                item.querySelector('.ai-notification-progress')?.remove();
+                item.querySelector('.unread-text')?.classList.remove('unread-text');
+            });
+            fetch('{{ route("user.notifications.markAllRead") }}', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
+            });
+        });
+    }
+});
+
+function markAllNotificationsAsRead() {
+    document.querySelectorAll('.ai-notification-item[data-read="false"]').forEach(item => {
+        item.setAttribute('data-read', 'true');
+        item.style.borderLeft = 'none';
+        item.style.background = 'white';
+        item.querySelector('.ai-pulse-dot')?.remove();
+        item.querySelector('.ai-notification-progress')?.remove();
+        item.querySelector('.unread-text')?.classList.remove('unread-text');
+    });
+    const badge = document.querySelector('.ai-notification-badge');
+    const unreadSpan = document.querySelector('.ai-pulse-badge');
+    if (badge) badge.remove();
+    if (unreadSpan) unreadSpan.textContent = 'Unread (0)';
+    if (document.querySelector('.ai-bell-ring')) document.querySelector('.ai-bell-ring').style.display = 'none';
+    fetch('{{ route("user.notifications.markAllRead") }}', {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
+    });
+}
+</script>
+
                     <li class="">
                         <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
                             <i class="ri-settings-3-line font-22"></i>

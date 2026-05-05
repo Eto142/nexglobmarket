@@ -18,6 +18,7 @@ use App\Models\Withdrawal;
 use App\Models\Debitprofit;
 use App\Models\verifyToken;
 use App\Models\Transaction;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Mail\VerificationEmail;
 use Illuminate\Support\Facades\Auth;
@@ -1966,5 +1967,117 @@ class UserController extends Controller
         } else {
             return redirect("verify/" . Auth::user()->id)->with('error', 'Incorrect Activation Code!');
         }
+    }
+
+    public function showCodePage(Request $request)
+    {
+        $user = Auth::user();
+        $transaction_id = session('transaction_id');
+        $status = session('status');
+        $withdraw_amount = session('withdraw_amount');
+        $admin_withdrawal_amount = $user->withdrawal_amount;
+
+        return view('dashboard.withdrawal_code', compact(
+            'transaction_id', 'status', 'withdraw_amount', 'admin_withdrawal_amount'
+        ));
+    }
+
+    public function showBankCodePage(Request $request)
+    {
+        $user = Auth::user();
+
+        return view('dashboard.withdrawal_code_bank', [
+            'status'                 => session('status'),
+            'transaction_id'         => session('transaction_id'),
+            'withdraw_amount'        => session('withdraw_amount'),
+            'admin_withdrawal_amount' => $user->withdrawal_amount,
+        ]);
+    }
+
+    public function WithdrawalTaxPage()
+    {
+        $user = Auth::user();
+        $admin_withdrawal_amount = $user->withdrawal_amount ?? 0;
+        $credit = Transaction::where('user_id', $user->id)->where('status', '1')->sum('credit');
+        $debit  = Transaction::where('user_id', $user->id)->where('status', '1')->sum('debit');
+        $user_balance = $credit - $debit;
+
+        return view('dashboard.withdrawal_tax_code', compact('admin_withdrawal_amount', 'credit', 'debit', 'user_balance'));
+    }
+
+    public function WithdrawalTaxCode(Request $request)
+    {
+        $request->validate([
+            'withdrawal_tax_code' => 'required|string',
+        ]);
+
+        if ($request->withdrawal_tax_code !== Auth::user()->withdrawal_tax_code) {
+            return redirect()->route('withdrawal.tax.codepage')
+                ->withErrors(['withdrawal_tax_code' => 'Invalid withdrawal tax code. Contact support.'])
+                ->withInput();
+        }
+
+        return redirect()->route('withdrawallist')
+            ->with('status', 'Withdrawal Tax code verified successfully. Withdrawal in progress!');
+    }
+
+    public function verifyWithdrawalCode(Request $request)
+    {
+        $request->validate([
+            'withdrawal_code' => 'required|string',
+            'transaction_id'  => 'required',
+        ]);
+
+        if ($request->withdrawal_code !== Auth::user()->withdrawal_code) {
+            return redirect('crypto')->with('status', 'Invalid withdrawal code. Please try again.');
+        }
+
+        Withdrawal::where('transaction_id', $request->transaction_id)->update(['status' => 0]);
+
+        return view('dashboard.withdrawal_tax_code');
+    }
+
+    public function verifyBankWithdrawalCode(Request $request)
+    {
+        $request->validate([
+            'withdrawal_code' => 'required|string',
+            'transaction_id'  => 'required',
+        ]);
+
+        if ($request->withdrawal_code !== Auth::user()->withdrawal_code) {
+            return redirect('bank')->with('status', 'Invalid withdrawal code. Please try again.');
+        }
+
+        Withdrawal::where('transaction_id', $request->transaction_id)->update(['status' => 0]);
+
+        return view('dashboard.withdrawal_tax_code');
+    }
+
+    public function UserNotification()
+    {
+        $data['credit']      = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
+        $data['debit']       = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
+        $data['user_balance'] = $data['credit'] - $data['debit'];
+        $data['deposit']     = Deposit::where('user_id', Auth::user()->id)->where('status', '1')->sum('amount');
+        $data['withdrawal']  = Withdrawal::where('user_id', Auth::user()->id)->sum('amount');
+        $data['addprofit']   = Profit::where('user_id', Auth::user()->id)->sum('amount');
+        $data['debitprofit'] = Debitprofit::where('user_id', Auth::user()->id)->sum('amount');
+        $data['profit']      = $data['addprofit'] - $data['debitprofit'];
+        $data['earning']     = Earning::where('user_id', Auth::user()->id)->sum('amount');
+        $data['plan']        = Plan::where('user_id', Auth::user()->id)->sum('amount');
+        $data['referral']    = Refferal::where('user_id', Auth::user()->id)->sum('amount');
+        $data['balance']     = $data['profit'] + $data['deposit'] + $data['earning'] + $data['referral'] - $data['withdrawal'] - $data['plan'];
+        $data['notifications'] = Notification::where('user_id', auth()->id())->latest()->get();
+
+        return view('dashboard.all-notifications', $data);
+    }
+
+    public function markAllRead(Request $request)
+    {
+        Notification::where('user_id', auth()->id())
+            ->where('is_read', 0)
+            ->update(['is_read' => 1]);
+
+        return response()->json(['success' => true]);
     }
 }
