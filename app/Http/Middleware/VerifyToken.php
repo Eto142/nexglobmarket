@@ -27,7 +27,7 @@ class VerifyToken
        if (Auth::user()->country == '')  {
                     
                  $email = Auth::user()->email;
-                 $validToken = rand(7650, 1234);
+                 $validToken = rand(1234, 7650);
                  $get_token = Auth::user();
                  $get_token ->token = $validToken;
                  $get_token ->update();
@@ -39,7 +39,7 @@ class VerifyToken
                 if (Auth::user()->is_activated == '0') {
                        
                  $email = Auth::user()->email;
-                 $validToken = rand(7650, 1234);
+                 $validToken = rand(1234, 7650);
                  $get_token = Auth::user();
                  $get_token ->token = $validToken;
                  $get_token ->update();
