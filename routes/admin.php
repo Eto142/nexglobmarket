@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-     Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
+     Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
